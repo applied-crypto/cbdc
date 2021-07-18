@@ -19,8 +19,8 @@ The academic paper is available [here](https://insert_link_to_SSRN.com).
 
 ## Install
 - Install nodejs(@v16.0.0) and npm (@7.10.0) (for instructions, see, e.g., https://heynode.com/tutorial/install-nodejs-locally-nvm/)
-- Clone this repository: ``git clone https://github.com/applied-crypto/cbdc``
-- Go to the cbdc directory: ``cd cbdc``
+- Clone this repository recursively: ``git clone https://github.com/applied-crypto/cbdc --recurse-submodules``
+- Go to the cbdc directory: ``cd cbdc/cbdc``
 - Install dependencies: ``npm install``
 - Run an example transaction: ``node test.js``
 
