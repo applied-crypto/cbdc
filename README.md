@@ -6,15 +6,16 @@ Yet, the prototype implements the Merkle-tree for storing the commitments, a lis
 account and transaction management. In addition, it supports fully private transactions while respecting 
 account transaction limits, ensuring compliance by design.
 
-This is achieved by implementing generic zero-knowledge proofs (SNARKs) using the iden3 libraries [circom](https://github.com/iden3/circom) and [snarkjs](https://github.com/iden3/snarkjs)
+This is achieved by implementing generic zero-knowledge proofs (SNARKs) using the iden3 libraries [circom](https://github.com/iden3/circom) and [snarkjs](https://github.com/iden3/snarkjs).
 
 ## Roadmap
 - SSI-based onboarding
 - Semi-private transactions
 
 ## Install
-- Install nodejs(@v16.0.0) and npm (@7.10.0)
-- Go to cbdc 
-- Install dependencies `npm install`
+- Install nodejs(@v16.0.0) and npm (@7.10.0) (for instructions, see, e.g., https://heynode.com/tutorial/install-nodejs-locally-nvm/)
+- Clone this repository ``git clone https://github.com/applied-crypto/cbdc``
+- Go to cbdc ``cd cbdc``
+- Install dependencies ``npm install``
 - Run an example transaction: ``node test.js``
 
