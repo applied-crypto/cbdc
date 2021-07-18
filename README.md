@@ -7,6 +7,8 @@ Yet, the prototype implements the Merkle-tree for storing the commitments, a lis
 account and transaction management. In addition, it supports fully private transactions while respecting 
 account transaction limits, ensuring compliance by design.
 
+This is achieved by implementing generic zero-knowledge proofs (SNARKs) using the iden3 libraries [circom](https://github.com/iden3/circom) and [snarkjs](https://github.com/iden3/snarkjs)
+
 ## Roadmap
 - SSI-based onboarding
 - Semi-private transactions
@@ -16,3 +18,4 @@ account transaction limits, ensuring compliance by design.
 - Go to cbdc 
 - Install dependencies `npm install`
 - Run an example transaction: ``node test.js``
+
