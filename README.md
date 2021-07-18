@@ -10,16 +10,17 @@ This is achieved by implementing generic zero-knowledge proofs (zk-SNARKs) using
 
 For information on how zero-knowledge proofs work, https://github.com/matter-labs/awesome-zero-knowledge-proofs is an *awesome* source of material. 
 
-The academic paper is available [here](insert link to SSRN).
+The academic paper is available [here](https://insert_link_to_SSRN.com).
 
 ## Roadmap
-- SSI-based onboarding
+- SSI-based onboarding with a digital ID
 - Semi-private transactions
+- Fully transparent transactions
 
 ## Install
 - Install nodejs(@v16.0.0) and npm (@7.10.0) (for instructions, see, e.g., https://heynode.com/tutorial/install-nodejs-locally-nvm/)
-- Clone this repository ``git clone https://github.com/applied-crypto/cbdc``
-- Go to cbdc ``cd cbdc``
-- Install dependencies ``npm install``
+- Clone this repository: ``git clone https://github.com/applied-crypto/cbdc``
+- Go to the cbdc directory: ``cd cbdc``
+- Install dependencies: ``npm install``
 - Run an example transaction: ``node test.js``
 
