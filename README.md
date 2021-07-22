@@ -10,7 +10,7 @@ This is achieved by implementing generic zero-knowledge proofs (zk-SNARKs) using
 
 For information on how zero-knowledge proofs work, https://github.com/matter-labs/awesome-zero-knowledge-proofs is an *awesome* source of material. 
 
-The academic paper is available [here](https://insert_link_to_SSRN.com).
+The academic paper is available [here](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3891121).
 
 ## Roadmap
 - SSI-based onboarding with a digital ID
