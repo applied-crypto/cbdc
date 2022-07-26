@@ -5,6 +5,7 @@ const {EdDSAKey} = require("./crypto/key");
 const Update = require("./update");
 const {getTimestamp} = require("./util");
 const {stringifyBigInts} = require("./util");
+const {AttributePresentation, merklePoseidon} = require("../../heimdall/heimdalljs");
 
 const EPOCH_TURNOVER_INTERVAL = 2592000; // 30 * 24 * 60 * 60
 const EPOCH_TURNOVER = 150;
@@ -15,6 +16,7 @@ class Account {
     sk
     nationality
     counter
+    id
 
     /**
      * Manages a account
@@ -139,9 +141,11 @@ class Account {
      * @param amount {Number}
      * @param privacyPool {PrivacyPool}
      * @param sessionNumber {Number}
+     * @param revocationRegistry {RevocationRegistry}
      * @returns update {Update}
      */
-    async update(amount, privacyPool, sessionNumber) {
+    async update(amount, privacyPool, sessionNumber, revocationRegistry) {
+        if (typeof this.id === 'undefined') return Promise.reject("No ID given");
         if (amount > this.balance) return Promise.reject("Balance to low"); // only if the account is the sender; in this case, is amount negative? Or do we add a sender/receiver tag?
         let element = this.stack[this.counter];
         let timestamp = getTimestamp();
@@ -196,6 +200,20 @@ class Account {
         let elementNew = this.stack[this.counter];
         privateInput.nextCommitmentSessionNumber = elementNew.sessionNumber;
         privateInput.nextCommitmentSignature = this.getCommitmentSignature(this.counter);
+
+        let idPresentation = new AttributePresentation(
+            this.id,
+            privateInput.timestamp,
+            revocationRegistry,
+            privateInput.sessionNumber,
+            this.sk,
+            this.id.signature.pk,
+            signPoseidon,
+            merklePoseidon,
+            Number(2)
+        );
+
+        console.log(idPresentation)
 
         let update = new Update();
         await update.generateProof(privateInput);
