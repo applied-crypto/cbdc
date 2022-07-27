@@ -1,5 +1,5 @@
-include "../../cbdc/lib/circomlib/circuits/poseidon.circom"
-include "../../cbdc/lib/circomlib/circuits/comparators.circom"
+include "../../cbdc/lib/circomlib/circuits/poseidon.circom";
+include "../../cbdc/lib/circomlib/circuits/comparators.circom";
 
 template HashLeftRight() {
 	signal input left;
@@ -26,7 +26,7 @@ template Selector() {
 	signal right_selector_1;
 	signal right_selector_2;
 
-	path_elem * (1 - path_elem) === 0
+	path_elem * (1 - path_elem) === 0;
 
 	left_selector_1 <== (1 - path_elem) * input_elem;
 	left_selector_2 <== (path_elem) * lemma_elem;
@@ -39,8 +39,8 @@ template Selector() {
 
 template MerkleProof(depth) {
 
-	signal private input lemma[depth + 2];
-	signal private input path[depth];
+	signal input lemma[depth + 2];
+	signal input path[depth];
 
 	component selectors[depth];
 	component hashers[depth];

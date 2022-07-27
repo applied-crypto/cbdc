@@ -1,29 +1,77 @@
-include "../../cbdc/lib/circomlib/circuits/poseidon.circom";
-include "../../cbdc/lib/circomlib/circuits/eddsaposeidon.circom";
-include "../lib/merkleproof.circom";
+pragma circom 2.0.0;
+
+//include "../../cbdc/lib/circomlib/circuits/poseidon.circom";
+//include "../../cbdc/lib/circomlib/circuits/eddsaposeidon.circom";
+//include "../lib/merkleproof.circom";
+include "../../heimdall/circom/presentations/attribute/circuit.circom";
 
 template PrivacyPool(commitmentsDepth) {
-	signal private input previousCommitmentInput[8];
-	signal private input previousCommitmentSignature[3];
-	signal private input pathPreviousCommitment[commitmentsDepth];
-	signal private input lemmaPreviousCommitment[commitmentsDepth + 2];
-	signal private input sessionNumber;
-	signal private input amount;
-	signal private input publicKey[2];
-	signal private input nullifierSignature[3];
-	signal private input nextCommitmentSessionNumber;
-	signal private input nextCommitmentSignature[3];
+    var depthCredential = 4;
+    var revocationDepth = 13;
 
+	signal input previousCommitmentInput[8];
+	signal input previousCommitmentSignature[3];
+	signal input pathPreviousCommitment[commitmentsDepth];
+	signal input lemmaPreviousCommitment[commitmentsDepth + 2];
+	signal input sessionNumber;
+	signal input amount;
+	signal input publicKey[2];
+	signal input nullifierSignature[3];
+	signal input nextCommitmentSessionNumber;
+	signal input nextCommitmentSignature[3];
 	signal input receiver; // 5
 	signal input timestamp; // 6
-	signal output root; // 0 
+
+    signal input pathMeta[depthCredential];
+    signal input lemmaMeta[depthCredential + 2];
+    signal input meta[8];
+    signal input signatureMeta[3];
+    signal input pathRevocation[revocationDepth];
+    signal input lemmaRevocation[revocationDepth + 2];
+    signal input revocationLeaf;
+    signal input signChallenge[3];
+    signal input issuerPK[2];
+    signal input lemma[depthCredential + 2];
+    signal input path[depthCredential];
+
+	signal output root; // 0
 	signal output linkTransfer; // 1
 	signal output linkNationality; // 2
 	signal output nullifier; // 3
 	signal output nextCommitment; // 4
 
 	var EPOCH_TURNOVER_INTERVAL = 2592000; // 30 * 24 * 60 * 60
-	var EPOCH_TURNOVER = 150; 
+	var EPOCH_TURNOVER = 150;
+
+	component attributePresentation = AttributePresentation(depthCredential, revocationDepth);
+
+    for(var i = 0; i < depthCredential; i++){
+	    attributePresentation.pathMeta[i] <== pathMeta[i];
+        attributePresentation.lemmaMeta[i] <== lemmaMeta[i];
+        attributePresentation.lemma[i] <== lemma[i];
+	    attributePresentation.path[i] <== path[i];
+    }
+
+    attributePresentation.lemmaMeta[depthCredential] <== lemmaMeta[depthCredential];
+    attributePresentation.lemmaMeta[depthCredential + 1] <== lemmaMeta[depthCredential + 1];
+    attributePresentation.lemma[depthCredential] <== lemma[depthCredential];
+    attributePresentation.lemma[depthCredential + 1] <== lemma[depthCredential + 1];
+
+    for(var i = 0; i < 8; i++){
+        attributePresentation.meta[i] <== meta[i];
+    }
+
+    for(var i = 0; i < 3; i++){
+        attributePresentation.signatureMeta[i] <== signatureMeta[i];
+        attributePresentation.signChallenge[i] <== signChallenge[i];
+    }
+
+    attributePresentation.revocationLeaf <== revocationLeaf;
+    attributePresentation.issuerPK[0] <== issuerPK[0];
+    attributePresentation.issuerPK[1] <== issuerPK[1];
+    attributePresentation.expiration <== timestamp;
+    attributePresentation.challenge <== sessionNumber;
+
 
 	var hashNumber = 11;
 	component hash[hashNumber];
@@ -108,7 +156,7 @@ template PrivacyPool(commitmentsDepth) {
 	linkNationality <== hashTwo[1].out;
 
 	// Check if balance of sender is greater equal amount
-	component gET[2] 
+	component gET[2] ;
 	gET[0] = GreaterEqThan(32);
 	gET[0].in[0] <== previousCommitmentInput[2];
 	gET[0].in[1] <== amount;
@@ -169,4 +217,4 @@ template PrivacyPool(commitmentsDepth) {
 }
 
 
-component main = PrivacyPool(5);
+component main {public [receiver, timestamp]} = PrivacyPool(5);

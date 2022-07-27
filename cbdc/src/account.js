@@ -7,6 +7,10 @@ const {getTimestamp} = require("./util");
 const {stringifyBigInts} = require("./util");
 const {AttributePresentation, merklePoseidon} = require("../../heimdall/heimdalljs");
 
+//for debugging
+const {wasm} = require("circom_tester");
+const path = require("path");
+
 const EPOCH_TURNOVER_INTERVAL = 2592000; // 30 * 24 * 60 * 60
 const EPOCH_TURNOVER = 150;
 
@@ -213,10 +217,18 @@ class Account {
             Number(2)
         );
 
-        console.log(idPresentation)
+        let finalPrivateInput = Object.assign(privateInput, idPresentation.privateInput);
+        delete finalPrivateInput.expiration;
+        delete finalPrivateInput.challenge;
+        //console.log(JSON.stringify(stringifyBigInts(finalPrivateInput)));
+
+        //for debugging
+        const cir = await wasm(path.join(__dirname, "..", "..", "circom", "circuit", "circuit.circom"));
+        let witness = await cir.calculateWitness(finalPrivateInput, true);
+        console.debug(witness.slice(0, 22));
 
         let update = new Update();
-        await update.generateProof(privateInput);
+        await update.generateProof(finalPrivateInput);
 
         return Promise.resolve(update);
     }

@@ -1,5 +1,5 @@
-include "./merkleproof.circom"
-include "./polygon.circom"
+include "./merkleproof.circom";
+include "./polygon.circom";
 
 template CheckAttribute(depth) {
     signal input lemma[depth + 2];

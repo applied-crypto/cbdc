@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "circom_tester": "^0.0.14"
+  }
+}
