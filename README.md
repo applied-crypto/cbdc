@@ -5,6 +5,7 @@ This prototype implements a subset of the features of the CBDC proposal by [Matt
 So far, the prototype implements the Merkle-tree for storing the commitments, a list for the nullifiers, and the basics for 
 account and transaction management. In addition, it supports fully private transactions while respecting 
 account transaction limits, ensuring compliance by design.
+Further we implemented the integration of a digital ID and a revocation check of it for each transfer.
 
 This is achieved by implementing generic zero-knowledge proofs (zk-SNARKs) using the iden3 libraries [circom](https://github.com/iden3/circom) and [snarkjs](https://github.com/iden3/snarkjs).
 
@@ -13,7 +14,6 @@ For information on how zero-knowledge proofs work, https://github.com/matter-lab
 The academic paper is available [here](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3891121).
 
 ## Roadmap
-- SSI-based onboarding with a digital ID
 - Semi-private transactions
 - Fully transparent transactions
 
