@@ -90,13 +90,11 @@ elif [ "$2" = "groth16" ]; then
     if [ "$1" = "zkey" ]; then
 
         circom circuit.circom --r1cs --wasm --sym -o dist
+(
+        cd dist/circuit_js
 
-        (
-          cd dist/circuit_js
-          node generate_witness.js circuit.wasm ../../input.json ../witness.wtns
-        )
-
-
+        node generate_witness.js circuit.wasm ../../input.json ../witness.wtns
+)
         snarkjs groth16 setup dist/circuit.r1cs $PTAU dist/circuit_final.zkey
         # No further contribution or random beacon applied
         snarkjs zkey verify dist/circuit.r1cs $PTAU dist/circuit_final.zkey

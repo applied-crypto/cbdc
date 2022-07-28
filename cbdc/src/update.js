@@ -16,11 +16,12 @@ class Update {
     async generateProof(input) {
         let root = process.mainModule.paths[0].split('node_modules')[0].slice(0, -1);
         let t0 = performance.now();
+        console.log(input)
         const {proof, publicSignals} = await snarkjs.groth16.fullProve(
             input,
             path.join(root, "zkp", "update", "circuit.wasm"),
             path.join(root, "zkp", "update", "circuit_final.zkey")
-        );
+        ).catch(console.log);
         let t1 = performance.now();
         console.log("Prove took " + (t1 - t0) + " milliseconds.");
 

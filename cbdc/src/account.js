@@ -204,7 +204,6 @@ class Account {
         let elementNew = this.stack[this.counter];
         privateInput.nextCommitmentSessionNumber = elementNew.sessionNumber;
         privateInput.nextCommitmentSignature = this.getCommitmentSignature(this.counter);
-
         let idPresentation = new AttributePresentation(
             this.id,
             privateInput.timestamp,
@@ -214,18 +213,20 @@ class Account {
             this.id.signature.pk,
             signPoseidon,
             merklePoseidon,
-            Number(2)
+            Number(1)
         );
 
-        let finalPrivateInput = Object.assign(privateInput, idPresentation.privateInput);
-        delete finalPrivateInput.expiration;
-        delete finalPrivateInput.challenge;
+        let finalPrivateInput = Object.assign({}, privateInput, idPresentation.privateInput);
+        //delete finalPrivateInput.expiration;
+        //delete finalPrivateInput.challenge;
         //console.log(JSON.stringify(stringifyBigInts(finalPrivateInput)));
 
+        console.log(JSON.stringify(stringifyBigInts(idPresentation.privateInput)));
         //for debugging
-        const cir = await wasm(path.join(__dirname, "..", "..", "circom", "circuit", "circuit.circom"));
-        let witness = await cir.calculateWitness(finalPrivateInput, true);
-        console.debug(witness.slice(0, 22));
+        //const cir = await wasm(path.join(__dirname, "..", "..", "circom", "circuit", "circuit.circom"));
+        //let witness = await cir.calculateWitness(finalPrivateInput, true);
+        //let witness = await cir.calculateWitness(privateInput, true);
+        //console.debug(witness.slice(0, 22));
 
         let update = new Update();
         await update.generateProof(finalPrivateInput);

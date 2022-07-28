@@ -3,7 +3,7 @@ pragma circom 2.0.0;
 //include "../../cbdc/lib/circomlib/circuits/poseidon.circom";
 //include "../../cbdc/lib/circomlib/circuits/eddsaposeidon.circom";
 //include "../lib/merkleproof.circom";
-include "../../heimdall/circom/presentations/attribute/circuit.circom";
+include "../../../heimdall/circom/presentations/attribute/circuit.circom";
 
 template PrivacyPool(commitmentsDepth) {
     var depthCredential = 4;
@@ -21,6 +21,8 @@ template PrivacyPool(commitmentsDepth) {
 	signal input nextCommitmentSignature[3];
 	signal input receiver; // 5
 	signal input timestamp; // 6
+	signal input expiration;
+	signal input challenge;
 
     signal input pathMeta[depthCredential];
     signal input lemmaMeta[depthCredential + 2];
@@ -66,12 +68,34 @@ template PrivacyPool(commitmentsDepth) {
         attributePresentation.signChallenge[i] <== signChallenge[i];
     }
 
+    for(var i = 0; i < revocationDepth; i++) {
+        attributePresentation.pathRevocation[i] <== pathRevocation[i];
+        attributePresentation.lemmaRevocation[i] <== lemmaRevocation[i];
+    }
+
+    attributePresentation.lemmaRevocation[revocationDepth] <== lemmaRevocation[revocationDepth];
+    attributePresentation.lemmaRevocation[revocationDepth + 1] <== lemmaRevocation[revocationDepth + 1];
+
     attributePresentation.revocationLeaf <== revocationLeaf;
     attributePresentation.issuerPK[0] <== issuerPK[0];
     attributePresentation.issuerPK[1] <== issuerPK[1];
-    attributePresentation.expiration <== timestamp;
-    attributePresentation.challenge <== sessionNumber;
+    attributePresentation.expiration <== expiration;
+    attributePresentation.challenge <== challenge;
 
+    //signal output type <== attributePresentation.type;
+    signal output revocationRoot <== attributePresentation.revocationRoot;
+    signal output revocationRegistry <== attributePresentation.revocationRegistry;
+    //signal output revoked <== attributePresentation.revoked;
+    //signal output linkBack <== attributePresentation.linkBack;
+    //signal output delegatable <== attributePresentation.delegatable;
+    //signal output attributeHash <== attributePresentation.attributeHash;
+
+    6936141895847827773039820306011898011976769516186037164536571405943971461449 === attributePresentation.type;
+    0 === attributePresentation.revoked;
+
+	component poseidonHash = Poseidon(1);
+	poseidonHash.inputs[0] <== publicKey[0];
+    poseidonHash.out === attributePresentation.attributeHash;
 
 	var hashNumber = 11;
 	component hash[hashNumber];

@@ -6,6 +6,7 @@ const PrivacyPool = require("./src/privacyPool");
 //const {getPublicKey} = require("../../heimdall/heimdalljs/src/crypto/key");
 //const {signPoseidon} = require(".../../heimdall/heimdalljs/circomlib/eddsa.js");
 const {Key, Credential, merklePoseidon, signPoseidon, RevocationRegistry} = require("../heimdall/heimdalljs");
+const {getTimestamp} = require("./src/util");
 
 let main = async () => {
     // Creating new privacy Pool
@@ -18,7 +19,7 @@ let main = async () => {
 
     // Creating two accounts
     let p1 = new Account(1000, "Germany", 1234);
-    let expiration = Date.now() + 60 * 60 * 24 * 365;
+    let expiration = getTimestamp() + 60 * 60 * 24 * 365;
     p1.id = new Credential(
         [
             "John",
@@ -35,7 +36,7 @@ let main = async () => {
         expiration,
         "IdentityCard",
         0,
-        123,
+        "RevocationRegistry",
         skIDIssuer,
         merklePoseidon,
         signPoseidon,
@@ -60,7 +61,7 @@ let main = async () => {
         expiration,
         "IdentityCard",
         0,
-        123,
+        "RevocationRegistry",
         skIDIssuer,
         merklePoseidon,
         signPoseidon,
