@@ -3,7 +3,7 @@ pragma circom 2.0.0;
 //include "../../cbdc/lib/circomlib/circuits/poseidon.circom";
 //include "../../cbdc/lib/circomlib/circuits/eddsaposeidon.circom";
 //include "../lib/merkleproof.circom";
-include "../../../heimdall/circom/presentations/attribute/circuit.circom";
+include "../../heimdall/circom/presentations/attribute/circuit.circom";
 
 template PrivacyPool(commitmentsDepth) {
     var depthCredential = 4;
@@ -21,8 +21,8 @@ template PrivacyPool(commitmentsDepth) {
 	signal input nextCommitmentSignature[3];
 	signal input receiver; // 5
 	signal input timestamp; // 6
-	signal input expiration;
-	signal input challenge;
+	//signal input expiration;
+	//signal input challenge;
 
     signal input pathMeta[depthCredential];
     signal input lemmaMeta[depthCredential + 2];
@@ -41,6 +41,13 @@ template PrivacyPool(commitmentsDepth) {
 	signal output linkNationality; // 2
 	signal output nullifier; // 3
 	signal output nextCommitment; // 4
+	signal output receiverOut;
+	signal output timestampOut;
+	signal output revocationRoot;
+	signal output revocationRegistry;
+
+	receiverOut <== receiver;
+	timestampOut <== timestamp;
 
 	var EPOCH_TURNOVER_INTERVAL = 2592000; // 30 * 24 * 60 * 60
 	var EPOCH_TURNOVER = 150;
@@ -79,16 +86,11 @@ template PrivacyPool(commitmentsDepth) {
     attributePresentation.revocationLeaf <== revocationLeaf;
     attributePresentation.issuerPK[0] <== issuerPK[0];
     attributePresentation.issuerPK[1] <== issuerPK[1];
-    attributePresentation.expiration <== expiration;
-    attributePresentation.challenge <== challenge;
+    attributePresentation.expiration <== timestamp;
+    attributePresentation.challenge <== sessionNumber;
 
-    //signal output type <== attributePresentation.type;
-    signal output revocationRoot <== attributePresentation.revocationRoot;
-    signal output revocationRegistry <== attributePresentation.revocationRegistry;
-    //signal output revoked <== attributePresentation.revoked;
-    //signal output linkBack <== attributePresentation.linkBack;
-    //signal output delegatable <== attributePresentation.delegatable;
-    //signal output attributeHash <== attributePresentation.attributeHash;
+    revocationRoot <== attributePresentation.revocationRoot;
+    revocationRegistry <== attributePresentation.revocationRegistry;
 
     6936141895847827773039820306011898011976769516186037164536571405943971461449 === attributePresentation.type;
     0 === attributePresentation.revoked;
@@ -241,4 +243,4 @@ template PrivacyPool(commitmentsDepth) {
 }
 
 
-component main {public [receiver, timestamp]} = PrivacyPool(5);
+component main = PrivacyPool(5);

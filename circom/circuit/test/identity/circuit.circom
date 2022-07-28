@@ -3,7 +3,7 @@ pragma circom 2.0.0;
 //include "../../cbdc/lib/circomlib/circuits/poseidon.circom";
 //include "../../cbdc/lib/circomlib/circuits/eddsaposeidon.circom";
 //include "../lib/merkleproof.circom";
-include "../../../../../heimdall/circom/presentations/attribute/circuit.circom";
+include "../../../../heimdall/circom/presentations/attribute/circuit.circom";
 
 template PrivacyPool(commitmentsDepth) {
     var depthCredential = 4;

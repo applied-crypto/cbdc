@@ -63,11 +63,12 @@ class PrivacyPool {
      * @param sender {Update}
      * @param receiver {Update}
      */
-    async update(sender, receiver) {
+    async update(sender, receiver, revocationRegistry) {
         let validity = await sender.verifyProof();
         validity &= await receiver.verifyProof();
         validity &= !this.nullifierExists(sender.nullifier);
         validity &= !this.nullifierExists(receiver.nullifier);
+        validity &= revocationRegistry.tree.root === BigInt(sender.publicSignals[7]);
         if(!validity) return Promise.reject("Proofs invalid");
         if(sender.receiver === receiver.receiver) return Promise.reject("Incorrect sender receiver relation");
         if(sender.linkTransfer !== receiver.linkTransfer) return Promise.reject("Transfer links not the same");
@@ -77,6 +78,7 @@ class PrivacyPool {
         this.commitmentsTree.update(++this.counter, BigInt(receiver.nextCommitment));
         this.nullifiers.push(BigInt(sender.nullifier));
         this.nullifiers.push(BigInt(receiver.nullifier));
+
 
         return Promise.resolve(true);
     }

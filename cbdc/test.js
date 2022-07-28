@@ -77,12 +77,12 @@ let main = async () => {
 
 
     let update2 = await p2.update(10, privacyPool, 1234567890, revocationRegistry).catch(console.log);
-    await privacyPool.update(update1, update2).catch(console.log);
+    await privacyPool.update(update1, update2, revocationRegistry).catch(console.log);
 
     // Fully private transaction
     let update3 = await p1.update(-10, privacyPool, 9876543210, revocationRegistry).catch(console.log);
     let update4 = await p2.update(10, privacyPool, 9876543210, revocationRegistry).catch(console.log);
-    await privacyPool.update(update3, update4).catch(console.log);
+    await privacyPool.update(update3, update4, revocationRegistry).catch(console.log);
 
     console.log("What the central bank sees:", privacyPool.commitments, privacyPool.nullifiers);
     console.log("What person 1 sees:", p1);

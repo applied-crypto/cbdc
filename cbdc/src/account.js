@@ -213,15 +213,14 @@ class Account {
             this.id.signature.pk,
             signPoseidon,
             merklePoseidon,
-            Number(1)
+            Number(2)
         );
 
         let finalPrivateInput = Object.assign({}, privateInput, idPresentation.privateInput);
-        //delete finalPrivateInput.expiration;
-        //delete finalPrivateInput.challenge;
+        delete finalPrivateInput.expiration;
+        delete finalPrivateInput.challenge;
         //console.log(JSON.stringify(stringifyBigInts(finalPrivateInput)));
 
-        console.log(JSON.stringify(stringifyBigInts(idPresentation.privateInput)));
         //for debugging
         //const cir = await wasm(path.join(__dirname, "..", "..", "circom", "circuit", "circuit.circom"));
         //let witness = await cir.calculateWitness(finalPrivateInput, true);
